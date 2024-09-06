@@ -28,13 +28,18 @@ request = requests.get(url)
 # Get a dictionary with data
 content = request.json()
 
-# Access the article titles and description
-body = ""
-for article in content["articles"]:
-    body = body + article["title"] + "\n" + article["description"] + 2*"\n"
+# Initialize the email body with the subject line
+body = "Subject: Today's news\n\n"
 
+# Append article titles, descriptions, and URLs to the email body
+for article in content["articles"][:10]:
+    if article["title"] and article["description"]:
+        body += article["title"] + "\n" + article["description"] + "\n" + article.get("url", "") + 2*"\n"
 
+# Encode the body in utf-8
 body = body.encode("utf-8")
+
+# Send the email
 send_email(message=body)
-# print(body)
+
 
