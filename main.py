@@ -1,6 +1,6 @@
 import requests
-from email import send_email
 import os
+from email import send_email
 from dotenv import load_dotenv
 
 # Load environment variables from a .env file
@@ -22,24 +22,26 @@ url = (
     "language=en"
 )
 
-# Make a request
+# Make a request to the News API
 request = requests.get(url)
 
-# Get a dictionary with data
+# Get a dictionary with the response data
 content = request.json()
 
 # Initialize the email body with the subject line
 body = "Subject: Today's news\n\n"
 
-# Append article titles, descriptions, and URLs to the email body
+# Append the title, description, and URL of the first 10 articles to the email body
 for article in content["articles"][:10]:
-    if article["title"] and article["description"]:
-        body += article["title"] + "\n" + article["description"] + "\n" + article.get("url", "") + 2*"\n"
+    if article["title"] and article["description"]:  # Check if title and description are not None
+        body += (
+            article["title"] + "\n" +
+            article["description"] + "\n" +
+            article.get("url", "") + 2 * "\n"
+        )
 
-# Encode the body in utf-8
+# Encode the email body in utf-8 format
 body = body.encode("utf-8")
 
-# Send the email
+# Send the email with the news articles
 send_email(message=body)
-
-
